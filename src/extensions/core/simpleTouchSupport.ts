@@ -12,7 +12,7 @@ app.registerExtension({
     let touchTime
     let lastTouch
     let lastScale
-    function getMultiTouchPos(e) {
+    function getMultiTouchDist(e) {
       return Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
@@ -43,7 +43,7 @@ app.registerExtension({
             lastScale = app.canvas.ds.scale
             lastTouch = getMultiTouchCenter(e)
 
-            touchDist = getMultiTouchPos(e)
+            touchDist = getMultiTouchDist(e)
             app.canvas.pointer_is_down = false
           }
         }
@@ -74,7 +74,7 @@ app.registerExtension({
 
     app.canvasEl.parentElement.addEventListener(
       'touchmove',
-      (e) => {
+      (e: TouchEvent) => {
         touchTime = null
         if (e.touches?.length === 2 && lastTouch && !e.ctrlKey && !e.shiftKey) {
           e.preventDefault() // Prevent browser from zooming when two textareas are touched
@@ -84,7 +84,7 @@ app.registerExtension({
           LiteGraph.closeAllContextMenus(window)
           // @ts-expect-error
           app.canvas.search_box?.close()
-          const newTouchDist = getMultiTouchPos(e)
+          const newTouchDist = getMultiTouchDist(e)
 
           const center = getMultiTouchCenter(e)
 
